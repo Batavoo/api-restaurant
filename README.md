@@ -98,4 +98,4 @@ The application uses SQLite with the following tables:
 
 ---
 
-Developed by [Gustavo Santos Arruda](https://github.com/your-username)
+Developed by [Gustavo Santos Arruda](https://www.linkedin.com/in/gustavo-santos-arruda/)
