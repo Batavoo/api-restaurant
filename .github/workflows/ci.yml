@@ -1,21 +1,63 @@
-name: Node.js API CI/CD
+name: CI/CD - Restaurant Management API
 
 on:
- # push:
-   # branches: [ main ]
+  push:
+    branches: [ main , develop]
   pull_request:
     branches: [ main, develop ]
 
 jobs:
-  build-and-test:
+
+  integration:
     runs-on: ubuntu-latest
 
     steps:
-      #- name: 📥 Checkout do código
-      #  uses: actions/checkout@v4
+      - name: 📥 Verificar branches conflitantes
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  
+
+      - name: 🔑 Configurar credenciais do Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: 🔍 Testar merge main <- develop
+        run: |
+          git fetch origin
+          git checkout main
+          git merge --no-commit --no-ff origin/develop || (
+            echo "❌ Conflitos detectados entre main e develop" && exit 1
+          )
+          git merge --abort || true
+          echo "✅ Nenhum conflito entre main e develop"
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
 
       - name: 🟢 Configurar Node.js
-      #  uses: actions/setup-node@v4
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 📦 Instalar dependências
+        run: npm install
+
+      - name: ✅ Checar padrão de código
+        run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+
+      - name: 🟢 Configurar Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
@@ -26,5 +68,31 @@ jobs:
       - name: ✅ Rodar testes
         run: npm test
 
-      - name: 🚀 Build (se aplicável)
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+
+      - name: 🟢 Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 📦 Instalar dependências
+        run: npm install
+
+      - name: 🚀 Build do projeto
         run: npm run build
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+
+      - name: 📦 Instalar dependências
+        run: npm install
