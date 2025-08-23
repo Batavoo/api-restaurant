@@ -12,7 +12,7 @@ const knexMock: Record<string, jest.Mock> = {
   raw: jest.fn(),
 };
 
-jest.mock('../database/knex', () => {
+jest.mock('@/database/knex', () => {
   return {
     knex: jest.fn(() => knexMock),
   };

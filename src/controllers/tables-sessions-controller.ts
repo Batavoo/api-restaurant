@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import { z } from "zod";
-import { knex } from "@/database/knex";
-import { AppError } from "@/utils/AppError";
+import { Request, Response, NextFunction } from 'express';
+import { z } from 'zod';
+import { knex } from '@/database/knex';
+import { AppError } from '@/utils/AppError';
 
 class TablesSessionsController {
   async create(request: Request, response: Response, next: NextFunction) {
@@ -12,16 +12,16 @@ class TablesSessionsController {
 
       const { table_id } = bodySchema.parse(request.body);
 
-      const session = await knex<TablesSessionsRepository>("tables_sessions")
+      const session = await knex<TablesSessionsRepository>('tables_sessions')
         .where({ table_id })
-        .orderBy("opened_at", "desc")
+        .orderBy('opened_at', 'desc')
         .first();
 
       if (session && !session.closed_at) {
-        throw new AppError("this table has already been opened");
+        throw new AppError('this table has already been opened');
       }
 
-      await knex<TablesSessionsRepository>("tables_sessions").insert({
+      await knex<TablesSessionsRepository>('tables_sessions').insert({
         table_id,
         opened_at: knex.fn.now(),
       });
@@ -34,9 +34,9 @@ class TablesSessionsController {
 
   async index(request: Request, response: Response, next: NextFunction) {
     try {
-      const sessions = await knex<TablesSessionsRepository>("tables_sessions")
+      const sessions = await knex<TablesSessionsRepository>('tables_sessions')
         .select()
-        .orderBy("closed_at");
+        .orderBy('closed_at');
 
       return response.json(sessions);
     } catch (error) {
@@ -49,22 +49,22 @@ class TablesSessionsController {
       const id = z
         .string()
         .transform((value) => Number(value))
-        .refine((value) => !isNaN(value), { message: "id must be a number" })
+        .refine((value) => !isNaN(value), { message: 'id must be a number' })
         .parse(request.params.id);
 
-      const session = await knex<TablesSessionsRepository>("tables_sessions")
+      const session = await knex<TablesSessionsRepository>('tables_sessions')
         .where({ id })
         .first();
 
       if (!session) {
-        throw new AppError("session table not found");
+        throw new AppError('session table not found');
       }
 
       if (session.closed_at) {
-        throw new AppError("this session table has already been closed");
+        throw new AppError('this session table has already been closed');
       }
 
-      await knex<TablesSessionsRepository>("tables_sessions")
+      await knex<TablesSessionsRepository>('tables_sessions')
         .update({
           closed_at: knex.fn.now(),
         })
