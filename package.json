@@ -4,6 +4,7 @@
   "description": "API para gerenciar pedidos das mesas de um restaurante",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "dev": "tsx watch src/server.ts",
     "knex": "node --import tsx ./node_modules/knex/bin/cli.js",
     "lint": "npx eslint src --ext .ts",
