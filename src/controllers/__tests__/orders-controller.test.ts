@@ -53,7 +53,7 @@ describe('OrdersController - create', () => {
     );
   });
 
-  it('deve criar pedido com sucesso', async () => {
+  it('should create order', async () => {
     knexMock.first
       .mockResolvedValueOnce({ id: 1, closed_at: null })
       .mockResolvedValueOnce({ id: 1, price: 10 });
