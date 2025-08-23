@@ -9,6 +9,9 @@
   },
   "author": "Gustavo Santos Arruda",
   "license": "ISC",
+  "engines": {
+    "node": "20.x"
+  },
   "type": "commonjs",
   "dependencies": {
     "express": "^4.19.2",
