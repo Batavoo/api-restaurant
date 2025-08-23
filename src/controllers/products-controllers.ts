@@ -1,17 +1,17 @@
-import { NextFunction, Request, Response } from "express";
-import { knex } from "@/database/knex";
-import { z } from "zod";
-import { AppError } from "@/utils/AppError";
+import { NextFunction, Request, Response } from 'express';
+import { knex } from '@/database/knex';
+import { z } from 'zod';
+import { AppError } from '@/utils/AppError';
 
 class ProductController {
   async index(request: Request, response: Response, next: NextFunction) {
     try {
       const { name } = request.query;
 
-      const products = await knex<ProductRepository>("products")
+      const products = await knex<ProductRepository>('products')
         .select()
-        .whereLike("name", `%${name ?? ""}%`)
-        .orderBy("name");
+        .whereLike('name', `%${name ?? ''}%`)
+        .orderBy('name');
 
       return response.status(200).json(products);
     } catch (error) {
@@ -28,7 +28,7 @@ class ProductController {
 
       const { name, price } = bodySchema.parse(request.body);
 
-      await knex<ProductRepository>("products").insert({ name, price });
+      await knex<ProductRepository>('products').insert({ name, price });
 
       return response.status(201).json();
     } catch (error) {
@@ -41,7 +41,7 @@ class ProductController {
       const id = z
         .string()
         .transform((value) => Number(value))
-        .refine((value) => !isNaN(value), { message: "id must be a number" })
+        .refine((value) => !isNaN(value), { message: 'id must be a number' })
         .parse(request.params.id);
 
       const bodySchema = z.object({
@@ -51,16 +51,16 @@ class ProductController {
 
       const { name, price } = bodySchema.parse(request.body);
 
-      const product = await knex<ProductRepository>("products")
+      const product = await knex<ProductRepository>('products')
         .select()
         .where({ id })
         .first();
 
       if (!product) {
-        throw new AppError("Product not found");
+        throw new AppError('Product not found');
       }
 
-      await knex<ProductRepository>("products")
+      await knex<ProductRepository>('products')
         .update({ name, price, updated_at: knex.fn.now() })
         .where({ id });
 
@@ -75,19 +75,19 @@ class ProductController {
       const id = z
         .string()
         .transform((value) => Number(value))
-        .refine((value) => !isNaN(value), { message: "id must be a number" })
+        .refine((value) => !isNaN(value), { message: 'id must be a number' })
         .parse(request.params.id);
 
-      const product = await knex<ProductRepository>("products")
+      const product = await knex<ProductRepository>('products')
         .select()
         .where({ id })
         .first();
 
       if (!product) {
-        throw new AppError("Product not found");
+        throw new AppError('Product not found');
       }
 
-      await knex<ProductRepository>("products").delete().where({ id });
+      await knex<ProductRepository>('products').delete().where({ id });
 
       return response.json();
     } catch (error) {
