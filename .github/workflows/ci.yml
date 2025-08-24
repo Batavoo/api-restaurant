@@ -16,6 +16,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: 🟢 Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 📦 Instalar dependências
+        run: npm install
+
+      - name: ✅ Rodar testes e gerar cobertura
+        run: npm run test:watch
+
       - name: 🔍️ Sonar scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
