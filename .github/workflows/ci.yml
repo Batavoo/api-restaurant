@@ -2,11 +2,30 @@ name: CI/CD - Restaurant Management API
 
 on:
   push:
-    branches: [ main , develop]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
+  sonar-analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔍️ Sonar scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: 🚩 Sonar quality gate
+        uses: SonarSource/sonarqube-scan-gate-action@v1
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   integration:
     runs-on: ubuntu-latest
@@ -15,7 +34,7 @@ jobs:
       - name: 📥 Verificar branches conflitantes
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  
+          fetch-depth: 0
 
       - name: 🔑 Configurar credenciais do Git
         run: |
