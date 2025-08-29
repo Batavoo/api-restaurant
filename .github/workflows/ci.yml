@@ -2,7 +2,7 @@ name: CI/CD - Restaurant Management API
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, feature/add-cloud-run-iac ]
   pull_request:
     branches: [main, develop]
 
@@ -158,8 +158,6 @@ jobs:
         run: npm run build
 
   deploy-dev:
-    if: github.ref == 'refs/heads/feature/add-cloud-run-iac'
-
     runs-on: ubuntu-latest
 
     steps:
