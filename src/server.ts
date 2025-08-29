@@ -18,5 +18,3 @@ export const server = (req: express.Request, res: express.Response) => {
 
   return app(req, res);
 };
-
-
