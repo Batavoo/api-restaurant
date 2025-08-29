@@ -2,7 +2,7 @@
   "name": "api-restaurant",
   "version": "1.0.0",
   "description": "API para gerenciar pedidos das mesas de um restaurante",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "node dist/bundle.js",
     "build": "node build.js",
