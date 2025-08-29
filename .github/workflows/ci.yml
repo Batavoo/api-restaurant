@@ -193,8 +193,7 @@ jobs:
       - name: ☁️ Deploy no Cloud Run (Staging)
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: ${{ env.GCP_SERVICE_NAME }}
-          suffix: stg
+          service: ${{ env.GCP_SERVICE_NAME }}-stg
           region: us-east1
           source: dist/
         if: ${{ github.ref_name == 'develop' || github.ref_name == 'feature/add-cloud-run-iac' }}
@@ -202,8 +201,7 @@ jobs:
       - name: ☁️ Deploy no Cloud Run (Production)
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: ${{ env.GCP_SERVICE_NAME }}
-          suffix: prd
+          service: ${{ env.GCP_SERVICE_NAME }}-prd
           region: southamerica-east1
           source: dist/
         if: ${{ github.ref_name == 'main' }}
