@@ -29,9 +29,8 @@ resource "google_cloud_run_v2_service" "stg_api_restaurant_service" {
 }
 
 resource "google_cloud_run_v2_service_iam_binding" "source_developer_iam_binding" {
-  name     = google_cloud_run_v2_service.stg_api_restaurant_service.name
-  location = var.gcp_region
-  members  = ["principal://iam.googleapis.com/${google_iam_workload_identity_pool.github_workload_identity_pool.name}/subject/repo"]
+  name    = google_cloud_run_v2_service.stg_api_restaurant_service.name
+  members = ["principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/${var.github_repository}"]
   # principal://iam.googleapis.com/projects/560057939373/locations/global/workloadIdentityPools/github-wif-pool/subject/repo:Pos-Grad-Devops/api-restaurant:ref:refs/heads/feature/add-cloud-run-iac
   role = "roles/run.sourceDeveloper"
 }
