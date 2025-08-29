@@ -2,10 +2,11 @@
   "name": "api-restaurant",
   "version": "1.0.0",
   "description": "API para gerenciar pedidos das mesas de um restaurante",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "build": "tsc",
-    "dev": "tsx watch src/server.ts",
+    // "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch dist/server.js",
     "knex": "node --import tsx ./node_modules/knex/bin/cli.js",
     "lint": "npx eslint src --ext .ts",
     "lint:fix": "npx eslint src --ext .ts --fix",

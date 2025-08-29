@@ -2,12 +2,11 @@ name: CI/CD - Restaurant Management API
 
 on:
   push:
-    branches: [ main , develop]
+    branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
 
 jobs:
-
   integration:
     runs-on: ubuntu-latest
 
@@ -15,12 +14,13 @@ jobs:
       - name: 📥 Verificar branches conflitantes
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  
+          fetch-depth: 0
 
       - name: 🔑 Configurar credenciais do Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
       - name: 🔍 Testar merge main <- develop
         run: |
           git fetch origin
@@ -30,6 +30,7 @@ jobs:
           )
           git merge --abort || true
           echo "✅ Nenhum conflito entre main e develop"
+
   check:
     runs-on: ubuntu-latest
 
@@ -87,12 +88,30 @@ jobs:
       - name: 🚀 Build do projeto
         run: npm run build
 
-  deploy:
+  deploy-dev:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/feature/add-cloud-run-iac'
+
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Checkout do código
         uses: actions/checkout@v4
 
-      - name: 📦 Instalar dependências
-        run: npm install
+      - name: 🔐 Autenticar com o Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/560057939373/locations/global/workloadIdentityPools/github-wif-pool/providers/github-wif-provider
+
+    #   - name: 📦 Instalar dependências
+    #     run: npm install
+
+      # - name: ☁️ Deploy para Google Cloud Run
+      #   run: |
+      #     gcloud run deploy api-restaurant \
+      #       --source . \
+      #       --region us-central1 \
+      #       --platform managed \
+      #       --allow-unauthenticated \
+      #       --set-env-vars NODE_ENV=production,PORT=8080,DATABASE_URL=${{ secrets.DATABASE_URL }},JWT_SECRET=${{ secrets.JWT_SECRET }},API_KEY=${{ secrets.API_KEY }} \
+      #       --memory 512Mi \
+      #       --timeout 300s
