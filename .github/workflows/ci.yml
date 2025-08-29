@@ -158,7 +158,7 @@ jobs:
         run: npm run build
 
   deploy-dev:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/feature/add-cloud-run-iac'
+    if: github.ref == 'refs/heads/feature/add-cloud-run-iac'
 
     runs-on: ubuntu-latest
 
