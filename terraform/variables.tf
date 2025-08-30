@@ -10,8 +10,8 @@ variable "gcp_region" {
   default     = "us-east1"
 }
 
-variable "github_repository" {
-  description = "The GitHub repository in the format <org/repo>"
+variable "github_repository_name" {
+  description = "The GitHub repository name in the format <org/repo>"
   type        = string
   default     = "Pos-Grad-Devops/api-restaurant"
 }
