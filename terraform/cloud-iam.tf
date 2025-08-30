@@ -1,3 +1,12 @@
+# locals {
+#   workload_identity_pool_roles = [
+#     # # Cloud Build
+#     # "roles/cloudbuild.builds.editor",
+#     # # Cloud Storage
+#     # "roles/storage.admin",
+#   ]
+# }
+
 resource "google_iam_workload_identity_pool" "github_pool" {
   display_name              = "GitHub Pool"
   description               = "Workload Identity Pool for GitHub Actions"
