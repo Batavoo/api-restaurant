@@ -1,5 +1,3 @@
-########## General ##########
-
 variable "gcp_project_name" {
   description = "The GCP project name where resources are deployed"
   type        = string
