@@ -2,15 +2,15 @@ name: CI/CD - Restaurant Management API
 
 on:
   push:
-    branches: [ main , develop]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
   notify-fail:
     runs-on: ubuntu-latest
     if: failure()
-    needs: [integration, check, test, build, deploy]
+    needs: [integration, check, test, build, deploy, sonar-analyze]
     steps:
       - name: 📣 Notificar Discord - Falha
         run: |
@@ -19,11 +19,44 @@ jobs:
   notify-success:
     runs-on: ubuntu-latest
     if: success()
-    needs: [integration, check, test, build, deploy]
+    needs: [integration, check, test, build, deploy, sonar-analyze]
     steps:
       - name: 📣 Notificar Discord - Sucesso
         run: |
           curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"✅ Pipeline concluída com sucesso no repositório ${{ github.repository }} na branch ${{ github.ref_name }}. Todos os jobs passaram!\"}" ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+  sonar-analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🟢 Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 📦 Instalar dependências
+        run: npm install
+
+      - name: ✅ Rodar testes e gerar cobertura
+        run: npm run test:coverage
+
+      - name: 🔍️ Sonar scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: 🚩 Sonar quality gate
+        uses: SonarSource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   integration:
     runs-on: ubuntu-latest
@@ -32,7 +65,7 @@ jobs:
       - name: 📥 Verificar branches conflitantes
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  
+          fetch-depth: 0
 
       - name: 🔑 Configurar credenciais do Git
         run: |
