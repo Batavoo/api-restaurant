@@ -8,7 +8,7 @@ jobs:
   notify-fail:
     runs-on: ubuntu-latest
     if: failure()
-    needs: [integration, check, test, build, deploy, sonar-analyze]
+    needs: [check, test, build, sonar-analyze]
     steps:
       - name: 📣 Notificar Discord - Falha
         run: |
@@ -17,7 +17,7 @@ jobs:
   notify-success:
     runs-on: ubuntu-latest
     if: success()
-    needs: [integration, check, test, build, deploy, sonar-analyze]
+    needs: [check, test, build, sonar-analyze]
     steps:
       - name: 📣 Notificar Discord - Sucesso
         run: |
