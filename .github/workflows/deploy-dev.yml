@@ -33,7 +33,7 @@ jobs:
           credentials_file_path: ${{ env.CREDENTIALS_FILE }}
 
       - name: Configure Docker
-        run: gcloud auth configure-docker
+        run: gcloud auth configure-docker gcr.io
 
       - name: Build Docker image
         run: |
@@ -70,13 +70,13 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
-        working-directory: ./infrastructure/dev
+        working-directory: ./infra/dev
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ env.CREDENTIALS_FILE }}
         run: terraform init
 
       - name: Terraform Plan
-        working-directory: ./infrastructure/dev
+        working-directory: ./infra/dev
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ env.CREDENTIALS_FILE }}
         run: |
@@ -85,7 +85,7 @@ jobs:
             -var="image_url=${{ needs.build-and-push.outputs.image_url }}"
 
       - name: Terraform Apply
-        working-directory: ./infrastructure/dev
+        working-directory: ./infra/dev
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ env.CREDENTIALS_FILE }}
         run: |
