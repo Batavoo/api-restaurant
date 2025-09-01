@@ -1,8 +1,8 @@
 import express from 'express';
 
-import { routes } from './routes';
-import { errorHandling } from './middlewares/error-handling';
-import { captureMetrics } from './middlewares/capture-metrics';
+import { routes } from '@/routes';
+import { errorHandling } from '@/middlewares/error-handling';
+import { captureMetrics } from '@/middlewares/capture-metrics';
 
 const PORT = 3333;
 const app = express();

@@ -1,0 +1,13 @@
+module "cloudrun" {
+  source = "../modules/cloudrun"
+
+  project_id   = var.project_id
+  region       = var.region
+  service_name = "api-restaurant-prod"
+  image_url    = var.image_url
+  environment  = "production"
+}
+
+output "service_url" {
+  value = module.cloudrun.service_url
+}
