@@ -131,7 +131,7 @@ jobs:
 
   notify-success:
     runs-on: ubuntu-latest
-    if: failure()
+    if: success()
     needs: [build-and-push, deploy]
     steps:
       - name: 📣 Success discord notification
