@@ -7,6 +7,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT }}
   REGION: us-east1
+  REPOSITORY: trabalho-pos
   SERVICE_NAME: api-restaurant-dev
   IMAGE_TAG: ${{ github.sha }}
   CREDENTIALS_FILE: /tmp/gcp-credentials.json
@@ -32,21 +33,39 @@ jobs:
           project_id: ${{ env.PROJECT_ID }}
           credentials_file_path: ${{ env.CREDENTIALS_FILE }}
 
-      - name: Configure Docker
-        run: gcloud auth configure-docker gcr.io
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+          gcloud auth list
+
+      - name: Create Repository if not exists
+        run: |
+          if ! gcloud artifacts repositories describe ${{ env.REPOSITORY }} --location=${{ env.REGION }} 2>/dev/null; then
+            echo "Creating repository ${{ env.REPOSITORY }} in ${{ env.REGION }}..."
+            gcloud artifacts repositories create ${{ env.REPOSITORY }} \
+              --repository-format=docker \
+              --location=${{ env.REGION }} \
+              --description="Docker repository for API"
+          else
+            echo "Repository ${{ env.REPOSITORY }} already exists"
+          fi
 
       - name: Build Docker image
         run: |
-          docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ env.IMAGE_TAG }} .
+          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE_NAME }}:${{ github.sha }} .
 
       - name: Push Docker image
         run: |
-          docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ env.IMAGE_TAG }}
+          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
 
       - name: Set output image URL
         id: set-output
         run: |
-          echo "image_url=gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ env.IMAGE_TAG }}" >> $GITHUB_OUTPUT
+          echo "image_url=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE_NAME }}:${{ github.sha }}" >> $GITHUB_OUTPUT
+
+      - name: Verify Image Push
+        run: |
+          gcloud artifacts docker images list ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}
 
       - name: Cleanup Credentials
         if: always()
@@ -104,47 +123,47 @@ jobs:
         if: always()
         run: rm -f ${{ env.CREDENTIALS_FILE }}
 
-  notify-fail:
-    runs-on: ubuntu-latest
-    if: failure()
-    needs: [build-and-push, deploy]
-    steps:
-      - name: Generate Action Link
-        run: |
-          ACTION_LINK="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          echo "ACTION_LINK=$ACTION_LINK" >> $GITHUB_ENV
-
-      - name: 📣 Fail discord notification
-        uses: tsickert/discord-webhook@v5.3.0
-        with:
-          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          username: 'Github Actions'
-          avatar-url: 'https://cdn-icons-png.flaticon.com/512/7717/7717267.png'
-          embed-title: 'Deploy DEV'
-          embed-description: '❌ Falha ao fazer deploy da api em DEV!'
-          embed-color: 14553088
-          embed-thumbnail-url: 'https://e7.pngegg.com/pngimages/834/472/png-clipart-google-cloud-icon-google-cloud-platform-cloud-computing-amazon-web-services-virtual-private-cloud-cloud-computing-text-trademark.png'
-          embed-author-name: 'Github Actions'
-          embed-author-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
-          embed-footer-text: 'URL da execução: ${{ env.ACTION_LINK }}'
-          embed-footer-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
-
-  notify-success:
-    runs-on: ubuntu-latest
-    if: success()
-    needs: [build-and-push, deploy]
-    steps:
-      - name: 📣 Success discord notification
-        uses: tsickert/discord-webhook@v5.3.0
-        with:
-          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          username: 'Github Actions'
-          avatar-url: 'https://cdn-icons-png.flaticon.com/512/7717/7717267.png'
-          embed-title: 'Deploy DEV'
-          embed-description: '✅ O Deploy da api em DEV foi realizado com sucesso!'
-          embed-color: 2067276
-          embed-thumbnail-url: 'https://e7.pngegg.com/pngimages/834/472/png-clipart-google-cloud-icon-google-cloud-platform-cloud-computing-amazon-web-services-virtual-private-cloud-cloud-computing-text-trademark.png'
-          embed-author-name: 'Github Actions'
-          embed-author-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
-          embed-footer-text: 'URL da api: ${{ needs.deploy.outputs.service_url }}'
-          embed-footer-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
+  # notify-fail:
+  #   runs-on: ubuntu-latest
+  #   if: failure()
+  #   needs: [build-and-push, deploy]
+  #   steps:
+  #     - name: Generate Action Link
+  #       run: |
+  #         ACTION_LINK="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+  #         echo "ACTION_LINK=$ACTION_LINK" >> $GITHUB_ENV
+  #
+  #     - name: 📣 Fail discord notification
+  #       uses: tsickert/discord-webhook@v5.3.0
+  #       with:
+  #         webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+  #         username: 'Github Actions'
+  #         avatar-url: 'https://cdn-icons-png.flaticon.com/512/7717/7717267.png'
+  #         embed-title: 'Deploy DEV'
+  #         embed-description: '❌ Falha ao fazer deploy da api em DEV!'
+  #         embed-color: 14553088
+  #         embed-thumbnail-url: 'https://e7.pngegg.com/pngimages/834/472/png-clipart-google-cloud-icon-google-cloud-platform-cloud-computing-amazon-web-services-virtual-private-cloud-cloud-computing-text-trademark.png'
+  #         embed-author-name: 'Github Actions'
+  #         embed-author-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
+  #         embed-footer-text: 'URL da execução: ${{ env.ACTION_LINK }}'
+  #         embed-footer-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
+  #
+  # notify-success:
+  #   runs-on: ubuntu-latest
+  #   if: success()
+  #   needs: [build-and-push, deploy]
+  #   steps:
+  #     - name: 📣 Success discord notification
+  #       uses: tsickert/discord-webhook@v5.3.0
+  #       with:
+  #         webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+  #         username: 'Github Actions'
+  #         avatar-url: 'https://cdn-icons-png.flaticon.com/512/7717/7717267.png'
+  #         embed-title: 'Deploy DEV'
+  #         embed-description: '✅ O Deploy da api em DEV foi realizado com sucesso!'
+  #         embed-color: 2067276
+  #         embed-thumbnail-url: 'https://e7.pngegg.com/pngimages/834/472/png-clipart-google-cloud-icon-google-cloud-platform-cloud-computing-amazon-web-services-virtual-private-cloud-cloud-computing-text-trademark.png'
+  #         embed-author-name: 'Github Actions'
+  #         embed-author-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
+  #         embed-footer-text: 'URL da api: ${{ needs.deploy.outputs.service_url }}'
+  #         embed-footer-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
