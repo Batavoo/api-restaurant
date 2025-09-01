@@ -7,6 +7,24 @@ on:
     branches: [main, develop]
 
 jobs:
+  notify-fail:
+    runs-on: ubuntu-latest
+    if: failure()
+    needs: [integration, check, test, build, deploy, sonar-analyze]
+    steps:
+      - name: 📣 Notificar Discord - Falha
+        run: |
+          curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"❌ Pipeline falhou no repositório ${{ github.repository }} na branch ${{ github.ref_name }}. Verifique os logs para mais detalhes.\"}" ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+  notify-success:
+    runs-on: ubuntu-latest
+    if: success()
+    needs: [integration, check, test, build, deploy, sonar-analyze]
+    steps:
+      - name: 📣 Notificar Discord - Sucesso
+        run: |
+          curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"✅ Pipeline concluída com sucesso no repositório ${{ github.repository }} na branch ${{ github.ref_name }}. Todos os jobs passaram!\"}" ${{ secrets.DISCORD_WEBHOOK_URL }}
+
   sonar-analyze:
     runs-on: ubuntu-latest
 
