@@ -74,11 +74,14 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
-      - name: Terraform Init
+      - name: Terraform Init with Backend
         working-directory: ./infra/dev
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ env.CREDENTIALS_FILE }}
-        run: terraform init
+        run: |
+          terraform init -reconfigure \
+            -backend-config="bucket=tf-state-${{ env.PROJECT_ID }}" \
+            -backend-config="prefix=terraform/dev"
 
       - name: Terraform Apply
         working-directory: ./infra/dev
