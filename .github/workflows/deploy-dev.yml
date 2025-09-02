@@ -93,7 +93,7 @@ jobs:
         id: get-url
         working-directory: ./infra/dev
         run: |
-          SERVICE_URL=$(terraform output -raw service_url)
+          SERVICE_URL=$(terraform output -json | jq -r '.service_url.value')
           echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
 
       - name: Cleanup Credentials
@@ -125,22 +125,22 @@ jobs:
   #         embed-footer-text: 'URL da execução: ${{ env.ACTION_LINK }}'
   #         embed-footer-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
   #
-  # notify-success:
-  #   runs-on: ubuntu-latest
-  #   if: success()
-  #   needs: [build-and-push, deploy]
-  #   steps:
-  #     - name: 📣 Success discord notification
-  #       uses: tsickert/discord-webhook@v5.3.0
-  #       with:
-  #         webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-  #         username: 'Github Actions'
-  #         avatar-url: 'https://cdn-icons-png.flaticon.com/512/7717/7717267.png'
-  #         embed-title: 'Deploy DEV'
-  #         embed-description: '✅ O Deploy da api em DEV foi realizado com sucesso!'
-  #         embed-color: 2067276
-  #         embed-thumbnail-url: 'https://e7.pngegg.com/pngimages/834/472/png-clipart-google-cloud-icon-google-cloud-platform-cloud-computing-amazon-web-services-virtual-private-cloud-cloud-computing-text-trademark.png'
-  #         embed-author-name: 'Github Actions'
-  #         embed-author-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
-  #         embed-footer-text: 'URL da api: ${{ needs.deploy.outputs.service_url }}'
-  #         embed-footer-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
+  notify-success:
+    runs-on: ubuntu-latest
+    if: success()
+    needs: [build-and-push, deploy]
+    steps:
+      - name: 📣 Success discord notification
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          username: 'Github Actions'
+          avatar-url: 'https://cdn-icons-png.flaticon.com/512/7717/7717267.png'
+          embed-title: 'Deploy DEV'
+          embed-description: '✅ O Deploy da api em DEV foi realizado com sucesso!'
+          embed-color: 2067276
+          embed-thumbnail-url: 'https://e7.pngegg.com/pngimages/834/472/png-clipart-google-cloud-icon-google-cloud-platform-cloud-computing-amazon-web-services-virtual-private-cloud-cloud-computing-text-trademark.png'
+          embed-author-name: 'Github Actions'
+          embed-author-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
+          embed-footer-text: 'URL da api: ${{ needs.deploy.outputs.service_url }}'
+          embed-footer-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
