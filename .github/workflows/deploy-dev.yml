@@ -96,7 +96,7 @@ jobs:
         id: get-url
         working-directory: ./infra/dev
         run: |
-          SERVICE_URL=$(terraform output -json | jq -r '.service_url.value')
+          SERVICE_URL=$(terraform output -raw service_url)
           echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
 
       - name: Cleanup Credentials
