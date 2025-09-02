@@ -74,7 +74,7 @@ jobs:
           echo '${{ secrets.GCP_SA_KEY }}' > ${{ env.CREDENTIALS_FILE }}
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_wrapper: false
 
@@ -99,6 +99,8 @@ jobs:
       - name: Get Cloud Run URL
         id: get-url
         working-directory: ./infra/dev
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ env.CREDENTIALS_FILE }}
         run: |
           SERVICE_URL=$(terraform output service_url)
           echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
