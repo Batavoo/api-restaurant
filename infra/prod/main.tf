@@ -1,3 +1,8 @@
+provider "google" {
+  project = var.project_id
+  region  = var.region
+}
+
 module "cloudrun" {
   source = "../modules/cloudrun"
 

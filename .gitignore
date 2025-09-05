@@ -1,5 +1,6 @@
 node_modules/
 yarn.lock
+
 dist/
 .env
 coverage/
@@ -20,5 +21,4 @@ override.tf.json
 .terraform.tfstate.lock.info
 .terraformrc
 terraform.rc
-teste
-
+.idea/

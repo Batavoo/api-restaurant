@@ -109,31 +109,31 @@ jobs:
         if: always()
         run: rm -f ${{ env.CREDENTIALS_FILE }}
 
-  # notify-fail:
-  #   runs-on: ubuntu-latest
-  #   if: failure()
-  #   needs: [build-and-push, deploy]
-  #   steps:
-  #     - name: Generate Action Link
-  #       run: |
-  #         ACTION_LINK="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-  #         echo "ACTION_LINK=$ACTION_LINK" >> $GITHUB_ENV
-  #
-  #     - name: 📣 Fail discord notification
-  #       uses: tsickert/discord-webhook@v5.3.0
-  #       with:
-  #         webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-  #         username: 'Github Actions'
-  #         avatar-url: 'https://cdn-icons-png.flaticon.com/512/7717/7717267.png'
-  #         embed-title: 'Deploy DEV'
-  #         embed-description: '❌ Falha ao fazer deploy da api em DEV!'
-  #         embed-color: 14553088
-  #         embed-thumbnail-url: 'https://e7.pngegg.com/pngimages/834/472/png-clipart-google-cloud-icon-google-cloud-platform-cloud-computing-amazon-web-services-virtual-private-cloud-cloud-computing-text-trademark.png'
-  #         embed-author-name: 'Github Actions'
-  #         embed-author-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
-  #         embed-footer-text: 'URL da execução: ${{ env.ACTION_LINK }}'
-  #         embed-footer-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
-  #
+  notify-fail:
+    runs-on: ubuntu-latest
+    if: failure()
+    needs: [build-and-push, deploy]
+    steps:
+      - name: Generate Action Link
+        run: |
+          ACTION_LINK="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo "ACTION_LINK=$ACTION_LINK" >> $GITHUB_ENV
+
+      - name: 📣 Fail discord notification
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          username: 'Github Actions'
+          avatar-url: 'https://cdn-icons-png.flaticon.com/512/7717/7717267.png'
+          embed-title: 'Deploy DEV'
+          embed-description: '❌ Falha ao fazer deploy da api em DEV!'
+          embed-color: 14553088
+          embed-thumbnail-url: 'https://e7.pngegg.com/pngimages/834/472/png-clipart-google-cloud-icon-google-cloud-platform-cloud-computing-amazon-web-services-virtual-private-cloud-cloud-computing-text-trademark.png'
+          embed-author-name: 'Github Actions'
+          embed-author-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
+          embed-footer-text: 'URL da execução: ${{ env.ACTION_LINK }}'
+          embed-footer-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
+
   notify-success:
     runs-on: ubuntu-latest
     if: success()
