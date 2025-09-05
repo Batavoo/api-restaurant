@@ -6,7 +6,7 @@ import { AppError } from '@/utils/AppError';
 class ProductController {
   async index(request: Request, response: Response, next: NextFunction) {
     try {
-      const { name } = request.query;
+       { name } = request.query;
 
       const products = await knex<ProductRepository>('products')
         .select()
