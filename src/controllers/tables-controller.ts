@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-//import { AppError } from '@/utils/AppError';
-//import { z } from 'zod';
 import { knex } from '@/database/knex';
 
 class TablesController {
-  async index(request: Request, response: Response, next: NextFunction) {
+  async index(_: Request, response: Response, next: NextFunction) {
     try {
       const tables = await knex<tableRepository>('tables')
         .select()
