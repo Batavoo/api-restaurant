@@ -57,29 +57,29 @@ jobs:
       #   env:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  # Adicionar essa na de PR de DEV para PROD
-  # integration:
-  #   runs-on: ubuntu-latest
+  Adicionar essa na de PR de DEV para PROD
+  integration:
+    runs-on: ubuntu-latest
   #
-  #   steps:
-  #     - name: 📥 Verificar branches conflitantes
-  #       uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
+    steps:
+      - name: 📥 Verificar branches conflitantes
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
   #
-  #     - name: 🔑 Configurar credenciais do Git
-  #       run: |
-  #         git config user.name "github-actions[bot]"
-  #         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  #     - name: 🔍 Testar merge main <- develop
-  #       run: |
-  #         git fetch origin
-  #         git checkout main
-  #         git merge --no-commit --no-ff origin/develop || (
-  #           echo "❌ Conflitos detectados entre main e develop" && exit 1
-  #         )
-  #         git merge --abort || true
-  #         echo "✅ Nenhum conflito entre main e develop"
+      - name: 🔑 Configurar credenciais do Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: 🔍 Testar merge main <- develop
+        run: |
+          git fetch origin
+          git checkout main
+          git merge --no-commit --no-ff origin/develop || (
+            echo "❌ Conflitos detectados entre main e develop" && exit 1
+          )
+          git merge --abort || true
+          echo "✅ Nenhum conflito entre main e develop"
   check:
     runs-on: ubuntu-latest
 
