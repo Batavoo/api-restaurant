@@ -49,7 +49,7 @@ describe('OrdersController - create', () => {
 
     expect(mockNext).toHaveBeenCalledWith(expect.any(AppError));
     expect((mockNext.mock.calls[0][0] as AppError).message).toBe(
-      'session table not found',
+      'session table not found123',
     );
   });
 
