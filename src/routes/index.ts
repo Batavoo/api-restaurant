@@ -6,6 +6,7 @@ import { tablesSessionsRoutes } from './tables-sessions-routes';
 import { ordersRoutes } from './orders-routes';
 import { metricsRoutes } from './metrics';
 import { healthRoutes } from './health';
+import { presentationRoutes } from './presentation';
 
 const routes = Router();
 routes.use('/products', productsRoutes);
@@ -14,5 +15,6 @@ routes.use('/tables-sessions', tablesSessionsRoutes);
 routes.use('/orders', ordersRoutes);
 routes.use('/metrics', metricsRoutes);
 routes.use('/health', healthRoutes);
+routes.use('/presentation', presentationRoutes);
 
 export { routes };
