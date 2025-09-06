@@ -1,13 +1,19 @@
-variable "gcp_project_name" {
-  description = "The GCP project name where resources are deployed"
+variable "project_name" {
+  description = "The GCP project name"
   type        = string
   default     = "pede-ja-api"
 }
 
-variable "gcp_region" {
+variable "region" {
   description = "The GCP region where resources are deployed"
   type        = string
   default     = "us-east1"
+}
+
+variable "zone" {
+  description = "The GCP zone where resources are deployed"
+  type        = string
+  default     = "us-east1-b"
 }
 
 variable "github_repository_name" {
@@ -21,3 +27,21 @@ variable "github_repository_name" {
 #   type        = string
 #   default     = "api-function-source.zip"
 # }
+
+variable "db_name" {
+  description = "The name of the database"
+  type        = string
+  default     = "sonarqube"
+}
+
+variable "db_user" {
+  description = "The database user"
+  type        = string
+  default     = "sonar"
+}
+
+variable "db_password" {
+  description = "The database password stored in Secret Manager"
+  type        = string
+  default     = "sonarpass" # TODO: remover daqui.
+}

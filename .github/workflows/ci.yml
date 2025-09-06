@@ -67,8 +67,8 @@ jobs:
       - name: 🔍️ Sonar scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
 
       # Comentando pra não ficar dando erro
       # - name: 🚩 Sonar quality gate
@@ -163,45 +163,45 @@ jobs:
           name: dist
           path: dist/
 
-  deploy:
-    runs-on: ubuntu-latest
+  # deploy:
+  #   runs-on: ubuntu-latest
 
-    needs: [ build ]
+  #   needs: [ build ]
 
-    env:
-      GCP_SERVICE_NAME: api-restaurant
+  #   env:
+  #     GCP_SERVICE_NAME: api-restaurant
 
-    permissions:
-      contents: read
-      id-token: write
+  #   permissions:
+  #     contents: read
+  #     id-token: write
 
-    steps:
-      - name: 📥 Checkout do código
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: 📥 Checkout do código
+  #       uses: actions/checkout@v4
 
-      - name: 🔐 Autenticar com o Google Cloud
-        uses: google-github-actions/auth@v3
-        with:
-          project_id: ${{ vars.GCP_PROJECT_ID }}
-          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+  #     - name: 🔐 Autenticar com o Google Cloud
+  #       uses: google-github-actions/auth@v3
+  #       with:
+  #         project_id: ${{ vars.GCP_PROJECT_ID }}
+  #         workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
-      - name: ⬇️ Download dos artefatos de build
-        uses: actions/download-artifact@v5
-        with:
-          name: dist
+  #     - name: ⬇️ Download dos artefatos de build
+  #       uses: actions/download-artifact@v5
+  #       with:
+  #         name: dist
 
-      - name: ☁️ Deploy no Cloud Run (Staging)
-        uses: google-github-actions/deploy-cloudrun@v2
-        with:
-          service: ${{ env.GCP_SERVICE_NAME }}-stg
-          region: ${{ vars.GCP_REGION }}
-          source: dist/
-        if: ${{ github.ref_name == 'develop' || github.ref_name == 'feature/add-cloud-run-iac' }}
+  #     - name: ☁️ Deploy no Cloud Run (Staging)
+  #       uses: google-github-actions/deploy-cloudrun@v2
+  #       with:
+  #         service: ${{ env.GCP_SERVICE_NAME }}-stg
+  #         region: ${{ vars.GCP_REGION }}
+  #         source: dist/
+  #       if: ${{ github.ref_name == 'develop' || github.ref_name == 'feature/add-cloud-run-iac' }}
 
-      - name: ☁️ Deploy no Cloud Run (Production)
-        uses: google-github-actions/deploy-cloudrun@v2
-        with:
-          service: ${{ env.GCP_SERVICE_NAME }}-prd
-          region: ${{ vars.GCP_REGION }}
-          source: dist/
-        if: ${{ github.ref_name == 'main' }}
+  #     - name: ☁️ Deploy no Cloud Run (Production)
+  #       uses: google-github-actions/deploy-cloudrun@v2
+  #       with:
+  #         service: ${{ env.GCP_SERVICE_NAME }}-prd
+  #         region: ${{ vars.GCP_REGION }}
+  #         source: dist/
+  #       if: ${{ github.ref_name == 'main' }}

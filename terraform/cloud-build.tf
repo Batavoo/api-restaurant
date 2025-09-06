@@ -6,7 +6,7 @@
 
 resource "google_cloudbuildv2_connection" "github_connection" {
   name     = "github-connection"
-  location = var.gcp_region
+  location = var.region
 
   github_config {
     app_installation_id = 83448691
@@ -19,7 +19,7 @@ resource "google_cloudbuildv2_connection" "github_connection" {
 
 resource "google_cloudbuildv2_repository" "github_repository" {
   name              = "github-api-restaurant-repository"
-  location          = var.gcp_region
+  location          = var.region
   parent_connection = google_cloudbuildv2_connection.github_connection.name
   remote_uri        = "https://github.com/${var.github_repository_name}.git"
 }
