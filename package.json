@@ -30,7 +30,7 @@
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@esbuild-plugins/node-resolve": "^0.2.2",
     "@eslint/eslintrc": "^3.3.1",
-    "@eslint/js": "^9.34.0",
+    "@eslint/js": "^9.35.0",
     "@types/express": "^4.17.21",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.14.12",
@@ -38,16 +38,18 @@
     "@typescript-eslint/eslint-plugin": "^8.40.0",
     "@typescript-eslint/parser": "^8.40.0",
     "esbuild": "^0.25.9",
-    "eslint": "^9.34.0",
+    "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.3.0",
     "jest": "^30.0.5",
     "jest-sonar-reporter": "^2.0.0",
+    "jiti": "^2.5.1",
     "prettier": "^3.6.2",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.1",
     "tsx": "^4.16.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.42.0"
   }
 }
