@@ -1,9 +1,3 @@
-resource "google_project_iam_member" "sonarqube_cloudsql_client" {
-  member  = "serviceAccount:${google_service_account.sonarqube_sa.email}"
-  project = var.project_name
-  role    = "roles/cloudsql.client"
-}
-
 resource "google_sql_database_instance" "postgres" {
   name                = "postgres"
   database_version    = "POSTGRES_15"

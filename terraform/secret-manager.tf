@@ -28,12 +28,6 @@
 #   secret_data = ""
 # }
 
-resource "google_project_iam_member" "sonarqube_secret_accessor" {
-  member  = "serviceAccount:${google_service_account.sonarqube_sa.email}"
-  project = var.project_name
-  role    = "roles/secretmanager.secretAccessor"
-}
-
 resource "google_secret_manager_secret" "db_password_secret" {
   secret_id           = "db-password"
   deletion_protection = false
