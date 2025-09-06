@@ -33,8 +33,8 @@ describe('ProductController', () => {
       // Arrange
       mockRequest.query = {};
       const mockProducts = [
-        { id: 1, name: 'Product 1', price: 10.50 },
-        { id: 2, name: 'Product 2', price: 20.00 },
+        { id: 1, name: 'Product 1', price: 10.5 },
+        { id: 2, name: 'Product 2', price: 20.0 },
       ];
 
       const mockKnexChain = {
@@ -46,7 +46,11 @@ describe('ProductController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockKnex).toHaveBeenCalledWith('products');
@@ -61,8 +65,8 @@ describe('ProductController', () => {
       // Arrange
       mockRequest.query = { name: 'Pizza' };
       const mockProducts = [
-        { id: 1, name: 'Pizza Margherita', price: 25.00 },
-        { id: 2, name: 'Pizza Pepperoni', price: 28.00 },
+        { id: 1, name: 'Pizza Margherita', price: 25.0 },
+        { id: 2, name: 'Pizza Pepperoni', price: 28.0 },
       ];
 
       const mockKnexChain = {
@@ -74,7 +78,11 @@ describe('ProductController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockKnexChain.whereLike).toHaveBeenCalledWith('name', '%Pizza%');
@@ -95,7 +103,11 @@ describe('ProductController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalledWith(databaseError);
@@ -108,7 +120,7 @@ describe('ProductController', () => {
       // Arrange
       mockRequest.body = {
         name: 'New Product',
-        price: 15.50,
+        price: 15.5,
       };
 
       const mockInsertChain = {
@@ -118,13 +130,17 @@ describe('ProductController', () => {
       (mockKnex as any).mockReturnValueOnce(mockInsertChain);
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockKnex).toHaveBeenCalledWith('products');
       expect(mockInsertChain.insert).toHaveBeenCalledWith({
         name: 'New Product',
-        price: 15.50,
+        price: 15.5,
       });
       expect(mockResponse.status).toHaveBeenCalledWith(201);
       expect(mockResponse.json).toHaveBeenCalled();
@@ -134,11 +150,15 @@ describe('ProductController', () => {
       // Arrange
       mockRequest.body = {
         name: 'abc',
-        price: 15.50,
+        price: 15.5,
       };
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalled();
@@ -153,7 +173,11 @@ describe('ProductController', () => {
       };
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalled();
@@ -168,7 +192,11 @@ describe('ProductController', () => {
       };
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalled();
@@ -178,7 +206,7 @@ describe('ProductController', () => {
       // Arrange
       mockRequest.body = {
         name: '  Trimmed Product  ',
-        price: 15.50,
+        price: 15.5,
       };
 
       const mockInsertChain = {
@@ -188,12 +216,16 @@ describe('ProductController', () => {
       (mockKnex as any).mockReturnValueOnce(mockInsertChain);
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockInsertChain.insert).toHaveBeenCalledWith({
         name: 'Trimmed Product',
-        price: 15.50,
+        price: 15.5,
       });
     });
 
@@ -201,7 +233,7 @@ describe('ProductController', () => {
       // Arrange
       mockRequest.body = {
         name: 'Valid Product',
-        price: 15.50,
+        price: 15.5,
       };
 
       const mockInsertChain = {
@@ -211,7 +243,11 @@ describe('ProductController', () => {
       (mockKnex as any).mockReturnValueOnce(mockInsertChain);
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalledWith(expect.any(Error));
@@ -224,10 +260,10 @@ describe('ProductController', () => {
       mockRequest.params = { id: '1' };
       mockRequest.body = {
         name: 'Updated Product',
-        price: 25.00,
+        price: 25.0,
       };
 
-      const existingProduct = { id: 1, name: 'Old Product', price: 20.00 };
+      const existingProduct = { id: 1, name: 'Old Product', price: 20.0 };
 
       const mockFindChain = {
         select: jest.fn().mockReturnThis(),
@@ -247,13 +283,17 @@ describe('ProductController', () => {
       } as any;
 
       // Act
-      await controller.update(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.update(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockFindChain.where).toHaveBeenCalledWith({ id: 1 });
       expect(mockUpdateChain.update).toHaveBeenCalledWith({
         name: 'Updated Product',
-        price: 25.00,
+        price: 25.0,
         updated_at: 'CURRENT_TIMESTAMP',
       });
       expect(mockUpdateChain.where).toHaveBeenCalledWith({ id: 1 });
@@ -265,7 +305,7 @@ describe('ProductController', () => {
       mockRequest.params = { id: '999' };
       mockRequest.body = {
         name: 'Updated Product',
-        price: 25.00,
+        price: 25.0,
       };
 
       const mockFindChain = {
@@ -277,7 +317,11 @@ describe('ProductController', () => {
       (mockKnex as any).mockReturnValueOnce(mockFindChain);
 
       // Act
-      await controller.update(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.update(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(AppError).toHaveBeenCalledWith('Product not found');
@@ -288,11 +332,15 @@ describe('ProductController', () => {
       mockRequest.params = { id: 'invalid' };
       mockRequest.body = {
         name: 'Updated Product',
-        price: 25.00,
+        price: 25.0,
       };
 
       // Act
-      await controller.update(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.update(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalled();
@@ -303,11 +351,15 @@ describe('ProductController', () => {
       mockRequest.params = { id: '1' };
       mockRequest.body = {
         name: 'abc', // too short
-        price: 25.00,
+        price: 25.0,
       };
 
       // Act
-      await controller.update(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.update(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalled();
@@ -319,7 +371,7 @@ describe('ProductController', () => {
       // Arrange
       mockRequest.params = { id: '1' };
 
-      const existingProduct = { id: 1, name: 'Product to Delete', price: 20.00 };
+      const existingProduct = { id: 1, name: 'Product to Delete', price: 20.0 };
 
       const mockFindChain = {
         select: jest.fn().mockReturnThis(),
@@ -336,7 +388,11 @@ describe('ProductController', () => {
       (mockKnex as any).mockReturnValueOnce(mockDeleteChain);
 
       // Act
-      await controller.remove(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.remove(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockFindChain.where).toHaveBeenCalledWith({ id: 1 });
@@ -358,7 +414,11 @@ describe('ProductController', () => {
       (mockKnex as any).mockReturnValueOnce(mockFindChain);
 
       // Act
-      await controller.remove(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.remove(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(AppError).toHaveBeenCalledWith('Product not found');
@@ -369,7 +429,11 @@ describe('ProductController', () => {
       mockRequest.params = { id: 'invalid' };
 
       // Act
-      await controller.remove(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.remove(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalled();
@@ -379,7 +443,7 @@ describe('ProductController', () => {
       // Arrange
       mockRequest.params = { id: '1' };
 
-      const existingProduct = { id: 1, name: 'Product', price: 20.00 };
+      const existingProduct = { id: 1, name: 'Product', price: 20.0 };
 
       const mockFindChain = {
         select: jest.fn().mockReturnThis(),
@@ -396,7 +460,11 @@ describe('ProductController', () => {
       (mockKnex as any).mockReturnValueOnce(mockDeleteChain);
 
       // Act
-      await controller.remove(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.remove(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalledWith(expect.any(Error));

@@ -47,7 +47,7 @@ describe('OrdersController', () => {
       const mockProduct = {
         id: 2,
         name: 'Pizza',
-        price: 25.50,
+        price: 25.5,
       };
 
       const mockSessionChain = {
@@ -66,12 +66,16 @@ describe('OrdersController', () => {
       };
 
       (mockKnex as any)
-        .mockReturnValueOnce(mockSessionChain)  // tables_sessions query
-        .mockReturnValueOnce(mockProductChain)  // products query
-        .mockReturnValueOnce(mockInsertChain);  // orders insert
+        .mockReturnValueOnce(mockSessionChain) // tables_sessions query
+        .mockReturnValueOnce(mockProductChain) // products query
+        .mockReturnValueOnce(mockInsertChain); // orders insert
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockSessionChain.where).toHaveBeenCalledWith({ id: 1 });
@@ -80,7 +84,7 @@ describe('OrdersController', () => {
         table_session_id: 1,
         product_id: 2,
         quantity: 3,
-        price: 25.50,
+        price: 25.5,
       });
       expect(mockResponse.status).toHaveBeenCalledWith(201);
       expect(mockResponse.json).toHaveBeenCalled();
@@ -102,7 +106,11 @@ describe('OrdersController', () => {
       (mockKnex as any).mockReturnValueOnce(mockSessionChain);
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(AppError).toHaveBeenCalledWith('session table not found');
@@ -131,7 +139,11 @@ describe('OrdersController', () => {
       (mockKnex as any).mockReturnValueOnce(mockSessionChain);
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(AppError).toHaveBeenCalledWith('this table is closed');
@@ -168,7 +180,11 @@ describe('OrdersController', () => {
         .mockReturnValueOnce(mockProductChain);
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(AppError).toHaveBeenCalledWith('product not found');
@@ -183,7 +199,11 @@ describe('OrdersController', () => {
       };
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalled();
@@ -198,7 +218,11 @@ describe('OrdersController', () => {
       };
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalled();
@@ -244,7 +268,11 @@ describe('OrdersController', () => {
         .mockReturnValueOnce(mockInsertChain);
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockInsertChain.insert).toHaveBeenCalledWith({
@@ -267,9 +295,9 @@ describe('OrdersController', () => {
           table_session_id: 1,
           product_id: 2,
           name: 'Pizza',
-          price: 25.50,
+          price: 25.5,
           quantity: 2,
-          total: 51.00,
+          total: 51.0,
           created_at: new Date(),
           updated_at: new Date(),
         },
@@ -294,10 +322,16 @@ describe('OrdersController', () => {
       };
 
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
-      mockKnex.raw = jest.fn().mockReturnValue('(orders.price * orders.quantity) AS total') as any;
+      mockKnex.raw = jest
+        .fn()
+        .mockReturnValue('(orders.price * orders.quantity) AS total') as any;
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockKnex).toHaveBeenCalledWith('orders');
@@ -310,11 +344,18 @@ describe('OrdersController', () => {
         'orders.quantity',
         '(orders.price * orders.quantity) AS total',
         'orders.created_at',
-        'orders.updated_at'
+        'orders.updated_at',
       );
-      expect(mockKnexChain.join).toHaveBeenCalledWith('products', 'products.id', 'orders.product_id');
+      expect(mockKnexChain.join).toHaveBeenCalledWith(
+        'products',
+        'products.id',
+        'orders.product_id',
+      );
       expect(mockKnexChain.where).toHaveBeenCalledWith({ table_session_id: 1 });
-      expect(mockKnexChain.orderBy).toHaveBeenCalledWith('orders.created_at', 'desc');
+      expect(mockKnexChain.orderBy).toHaveBeenCalledWith(
+        'orders.created_at',
+        'desc',
+      );
       expect(mockResponse.json).toHaveBeenCalledWith(mockOrders);
     });
 
@@ -323,7 +364,11 @@ describe('OrdersController', () => {
       mockRequest.params = { table_session_id: 'invalid' };
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalled();
@@ -341,10 +386,16 @@ describe('OrdersController', () => {
       };
 
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
-      mockKnex.raw = jest.fn().mockReturnValue('(orders.price * orders.quantity) AS total') as any;
+      mockKnex.raw = jest
+        .fn()
+        .mockReturnValue('(orders.price * orders.quantity) AS total') as any;
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockResponse.json).toHaveBeenCalledWith([]);
@@ -362,10 +413,16 @@ describe('OrdersController', () => {
       };
 
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
-      mockKnex.raw = jest.fn().mockReturnValue('(orders.price * orders.quantity) AS total') as any;
+      mockKnex.raw = jest
+        .fn()
+        .mockReturnValue('(orders.price * orders.quantity) AS total') as any;
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalledWith(expect.any(Error));
@@ -390,20 +447,31 @@ describe('OrdersController', () => {
       };
 
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
-      mockKnex.raw = jest.fn()
-        .mockReturnValueOnce('COALESCE(SUM(orders.price * orders.quantity), 0) AS total')
-        .mockReturnValueOnce('COALESCE(SUM(orders.quantity), 0) AS quantity') as any;
+      mockKnex.raw = jest
+        .fn()
+        .mockReturnValueOnce(
+          'COALESCE(SUM(orders.price * orders.quantity), 0) AS total',
+        )
+        .mockReturnValueOnce(
+          'COALESCE(SUM(orders.quantity), 0) AS quantity',
+        ) as any;
 
       // Act
-      await controller.show(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.show(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockKnex).toHaveBeenCalledWith('orders');
       expect(mockKnexChain.select).toHaveBeenCalledWith(
         'COALESCE(SUM(orders.price * orders.quantity), 0) AS total',
-        'COALESCE(SUM(orders.quantity), 0) AS quantity'
+        'COALESCE(SUM(orders.quantity), 0) AS quantity',
       );
-      expect(mockKnexChain.where).toHaveBeenCalledWith({ table_session_id: '1' });
+      expect(mockKnexChain.where).toHaveBeenCalledWith({
+        table_session_id: '1',
+      });
       expect(mockResponse.json).toHaveBeenCalledWith(mockSummary);
     });
 
@@ -424,12 +492,21 @@ describe('OrdersController', () => {
       };
 
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
-      mockKnex.raw = jest.fn()
-        .mockReturnValueOnce('COALESCE(SUM(orders.price * orders.quantity), 0) AS total')
-        .mockReturnValueOnce('COALESCE(SUM(orders.quantity), 0) AS quantity') as any;
+      mockKnex.raw = jest
+        .fn()
+        .mockReturnValueOnce(
+          'COALESCE(SUM(orders.price * orders.quantity), 0) AS total',
+        )
+        .mockReturnValueOnce(
+          'COALESCE(SUM(orders.quantity), 0) AS quantity',
+        ) as any;
 
       // Act
-      await controller.show(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.show(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockResponse.json).toHaveBeenCalledWith(mockEmptySummary);
@@ -439,7 +516,7 @@ describe('OrdersController', () => {
       // Arrange
       mockRequest.params = { table_session_id: '5' };
 
-      const mockSummary = [{ total: 50.00, quantity: 2 }];
+      const mockSummary = [{ total: 50.0, quantity: 2 }];
 
       const mockKnexChain = {
         select: jest.fn().mockReturnThis(),
@@ -447,15 +524,26 @@ describe('OrdersController', () => {
       };
 
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
-      mockKnex.raw = jest.fn()
-        .mockReturnValueOnce('COALESCE(SUM(orders.price * orders.quantity), 0) AS total')
-        .mockReturnValueOnce('COALESCE(SUM(orders.quantity), 0) AS quantity') as any;
+      mockKnex.raw = jest
+        .fn()
+        .mockReturnValueOnce(
+          'COALESCE(SUM(orders.price * orders.quantity), 0) AS total',
+        )
+        .mockReturnValueOnce(
+          'COALESCE(SUM(orders.quantity), 0) AS quantity',
+        ) as any;
 
       // Act
-      await controller.show(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.show(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
-      expect(mockKnexChain.where).toHaveBeenCalledWith({ table_session_id: '5' });
+      expect(mockKnexChain.where).toHaveBeenCalledWith({
+        table_session_id: '5',
+      });
     });
 
     it('should call next with error when database operation fails', async () => {
@@ -468,12 +556,21 @@ describe('OrdersController', () => {
       };
 
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
-      mockKnex.raw = jest.fn()
-        .mockReturnValueOnce('COALESCE(SUM(orders.price * orders.quantity), 0) AS total')
-        .mockReturnValueOnce('COALESCE(SUM(orders.quantity), 0) AS quantity') as any;
+      mockKnex.raw = jest
+        .fn()
+        .mockReturnValueOnce(
+          'COALESCE(SUM(orders.price * orders.quantity), 0) AS total',
+        )
+        .mockReturnValueOnce(
+          'COALESCE(SUM(orders.quantity), 0) AS quantity',
+        ) as any;
 
       // Act
-      await controller.show(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.show(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalledWith(expect.any(Error));

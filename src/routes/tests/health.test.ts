@@ -12,11 +12,11 @@ describe('Health Routes - Unit Tests', () => {
 
   beforeEach(() => {
     mockRequest = {};
-    
+
     jsonSpy = jest.fn();
     statusSpy = jest.fn().mockReturnThis();
     sendSpy = jest.fn();
-    
+
     mockResponse = {
       json: jsonSpy,
       status: statusSpy,
@@ -50,7 +50,7 @@ describe('Health Routes - Unit Tests', () => {
       // Assert
       expect(jsonSpy).toHaveBeenCalledWith({
         status: 'OK',
-        timeStamp: '2023-10-15T10:30:00.000Z'
+        timeStamp: '2023-10-15T10:30:00.000Z',
       });
 
       // Restore
@@ -64,11 +64,13 @@ describe('Health Routes - Unit Tests', () => {
       // Assert
       expect(jsonSpy).toHaveBeenCalledTimes(1);
       const calledWith = jsonSpy.mock.calls[0][0];
-      
+
       expect(calledWith).toHaveProperty('status', 'OK');
       expect(calledWith).toHaveProperty('timeStamp');
       expect(typeof calledWith.timeStamp).toBe('string');
-      expect(calledWith.timeStamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+      expect(calledWith.timeStamp).toMatch(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
+      );
     });
 
     it('should handle Date constructor errors', async () => {
@@ -129,22 +131,20 @@ describe('Health Routes - Integration Tests', () => {
   describe('GET /health', () => {
     it('should return 200 with status OK and timestamp', async () => {
       // Act
-      const response = await request(app)
-        .get('/health')
-        .expect(200);
+      const response = await request(app).get('/health').expect(200);
 
       // Assert
       expect(response.body).toHaveProperty('status', 'OK');
       expect(response.body).toHaveProperty('timeStamp');
       expect(typeof response.body.timeStamp).toBe('string');
-      expect(response.body.timeStamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+      expect(response.body.timeStamp).toMatch(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
+      );
     });
 
     it('should return valid timestamp format', async () => {
       // Act
-      const response = await request(app)
-        .get('/health')
-        .expect(200);
+      const response = await request(app).get('/health').expect(200);
 
       // Assert
       const timestamp = response.body.timeStamp;
@@ -155,10 +155,10 @@ describe('Health Routes - Integration Tests', () => {
     it('should return different timestamps on consecutive calls', async () => {
       // Act
       const response1 = await request(app).get('/health');
-      
+
       // Small delay to ensure different timestamps
-      await new Promise(resolve => setTimeout(resolve, 1));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1));
+
       const response2 = await request(app).get('/health');
 
       // Assert
@@ -169,9 +169,7 @@ describe('Health Routes - Integration Tests', () => {
 
     it('should have correct response headers', async () => {
       // Act
-      const response = await request(app)
-        .get('/health')
-        .expect(200);
+      const response = await request(app).get('/health').expect(200);
 
       // Assert
       expect(response.headers['content-type']).toMatch(/application\/json/);

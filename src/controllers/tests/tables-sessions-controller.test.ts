@@ -32,13 +32,13 @@ describe('TablesSessionsController', () => {
     it('should create a new table session successfully', async () => {
       // Arrange
       mockRequest.body = { table_id: 1 };
-      
+
       const mockKnexChain = {
         where: jest.fn().mockReturnThis(),
         orderBy: jest.fn().mockReturnThis(),
         first: jest.fn().mockResolvedValue(null), // Nenhuma sessão encontrada
       };
-      
+
       const mockInsertChain = {
         insert: jest.fn().mockResolvedValue([1]),
       };
@@ -50,7 +50,11 @@ describe('TablesSessionsController', () => {
       } as any;
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockKnexChain.where).toHaveBeenCalledWith({ table_id: 1 });
@@ -67,7 +71,7 @@ describe('TablesSessionsController', () => {
     it('should create a new session when existing session is closed', async () => {
       // Arrange
       mockRequest.body = { table_id: 1 };
-      
+
       const existingClosedSession = {
         id: 1,
         table_id: 1,
@@ -80,7 +84,7 @@ describe('TablesSessionsController', () => {
         orderBy: jest.fn().mockReturnThis(),
         first: jest.fn().mockResolvedValue(existingClosedSession),
       };
-      
+
       const mockInsertChain = {
         insert: jest.fn().mockResolvedValue([1]),
       };
@@ -92,7 +96,11 @@ describe('TablesSessionsController', () => {
       } as any;
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockResponse.status).toHaveBeenCalledWith(201);
@@ -102,7 +110,7 @@ describe('TablesSessionsController', () => {
     it('should throw error when table already has an open session', async () => {
       // Arrange
       mockRequest.body = { table_id: 1 };
-      
+
       const existingOpenSession = {
         id: 1,
         table_id: 1,
@@ -119,10 +127,16 @@ describe('TablesSessionsController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
-      expect(AppError).toHaveBeenCalledWith('this table has already been opened');
+      expect(AppError).toHaveBeenCalledWith(
+        'this table has already been opened',
+      );
     });
 
     it('should throw error for invalid table_id', async () => {
@@ -130,7 +144,11 @@ describe('TablesSessionsController', () => {
       mockRequest.body = { table_id: 'invalid' };
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalled();
@@ -139,7 +157,7 @@ describe('TablesSessionsController', () => {
     it('should call next with error when database operation fails', async () => {
       // Arrange
       mockRequest.body = { table_id: 1 };
-      
+
       const mockKnexChain = {
         where: jest.fn().mockReturnThis(),
         orderBy: jest.fn().mockReturnThis(),
@@ -149,7 +167,11 @@ describe('TablesSessionsController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.create(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.create(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalledWith(expect.any(Error));
@@ -172,7 +194,11 @@ describe('TablesSessionsController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockKnexChain.select).toHaveBeenCalled();
@@ -190,7 +216,11 @@ describe('TablesSessionsController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalledWith(expect.any(Error));
@@ -201,7 +231,7 @@ describe('TablesSessionsController', () => {
     it('should close a session successfully', async () => {
       // Arrange
       mockRequest.params = { id: '1' };
-      
+
       const existingSession = {
         id: 1,
         table_id: 1,
@@ -226,7 +256,11 @@ describe('TablesSessionsController', () => {
       } as any;
 
       // Act
-      await controller.update(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.update(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockFindChain.where).toHaveBeenCalledWith({ id: 1 });
@@ -241,7 +275,7 @@ describe('TablesSessionsController', () => {
     it('should throw error when session not found', async () => {
       // Arrange
       mockRequest.params = { id: '1' };
-      
+
       const mockKnexChain = {
         where: jest.fn().mockReturnThis(),
         first: jest.fn().mockResolvedValue(null),
@@ -250,7 +284,11 @@ describe('TablesSessionsController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.update(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.update(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(AppError).toHaveBeenCalledWith('session table not found');
@@ -259,7 +297,7 @@ describe('TablesSessionsController', () => {
     it('should throw error when session is already closed', async () => {
       // Arrange
       mockRequest.params = { id: '1' };
-      
+
       const existingClosedSession = {
         id: 1,
         table_id: 1,
@@ -275,10 +313,16 @@ describe('TablesSessionsController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.update(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.update(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
-      expect(AppError).toHaveBeenCalledWith('this session table has already been closed');
+      expect(AppError).toHaveBeenCalledWith(
+        'this session table has already been closed',
+      );
     });
 
     it('should throw error for invalid id parameter', async () => {
@@ -286,7 +330,11 @@ describe('TablesSessionsController', () => {
       mockRequest.params = { id: 'invalid' };
 
       // Act
-      await controller.update(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.update(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalled();
@@ -295,7 +343,7 @@ describe('TablesSessionsController', () => {
     it('should call next with error when database operation fails', async () => {
       // Arrange
       mockRequest.params = { id: '1' };
-      
+
       const mockKnexChain = {
         where: jest.fn().mockReturnThis(),
         first: jest.fn().mockRejectedValue(new Error('Database error')),
@@ -304,7 +352,11 @@ describe('TablesSessionsController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.update(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.update(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalledWith(expect.any(Error));

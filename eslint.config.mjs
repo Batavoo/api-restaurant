@@ -23,6 +23,9 @@ export default defineConfig([
       'plugin:@typescript-eslint/recommended',
       'plugin:prettier/recommended',
     ),
+    ignores: [
+      '**/*.test.ts',
+    ],
 
     plugins: {
       '@typescript-eslint': typescriptEslint,

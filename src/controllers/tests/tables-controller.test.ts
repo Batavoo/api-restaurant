@@ -42,7 +42,11 @@ describe('TablesController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockKnex).toHaveBeenCalledWith('tables');
@@ -64,7 +68,11 @@ describe('TablesController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockKnex).toHaveBeenCalledWith('tables');
@@ -86,7 +94,11 @@ describe('TablesController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockKnex).toHaveBeenCalledWith('tables');
@@ -109,7 +121,11 @@ describe('TablesController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalledWith(sqlError);
@@ -129,7 +145,11 @@ describe('TablesController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockNext).toHaveBeenCalledWith(networkError);
@@ -152,7 +172,11 @@ describe('TablesController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       // Verifica se a sequência de chamadas está correta
@@ -160,7 +184,7 @@ describe('TablesController', () => {
       expect(mockKnexChain.select).toHaveBeenCalledTimes(1);
       expect(mockKnexChain.orderBy).toHaveBeenCalledTimes(1);
       expect(mockKnexChain.orderBy).toHaveBeenCalledWith('table_number');
-      
+
       // Verifica se o resultado foi retornado corretamente
       expect(mockResponse.json).toHaveBeenCalledWith(mockTables);
     });
@@ -178,7 +202,11 @@ describe('TablesController', () => {
       (mockKnex as any).mockReturnValueOnce(mockKnexChain);
 
       // Act
-      await controller.index(mockRequest as Request, mockResponse as Response, mockNext);
+      await controller.index(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
 
       // Assert
       expect(mockRequest).toEqual(originalRequest);
