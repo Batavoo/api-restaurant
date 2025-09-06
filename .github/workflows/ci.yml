@@ -16,10 +16,10 @@ jobs:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           username: 'fulano triste'
           avatar-url: 'https://media.discordapp.net/attachments/1413674985263730709/1413677177345413171/image0.jpg?ex=68bcccf7&is=68bb7b77&hm=13bdc8f5aab111255c822cd1a973b25a6e1835d73b825256b8f5e586829cd847&=&format=webp&width=765&height=930'
-          embed-title: 'Deploy DEV'
-          embed-description: '❌ Falha ao fazer deploy da api em DEV! oh céus...'
+          embed-title: 'Pipeline CI'
+          embed-description: '❌ Pipeline falhou! affs...'
           embed-color: 14553088
-          embed-thumbnail-url: 'https://e7.pngegg.com/pngimages/834/472/png-clipart-google-cloud-icon-google-cloud-platform-cloud-computing-amazon-web-services-virtual-private-cloud-cloud-computing-text-trademark.png'
+          embed-thumbnail-url: 'https://media.discordapp.net/attachments/1413674985263730709/1413675507714887771/image0.jpg?ex=68bccb69&is=68bb79e9&hm=c1697b707e5afd5f4526467b135516ff06a76da633e6bc03224faf4ceaff77aa&=&format=webp&width=365&height=402'
           embed-author-name: 'Github Actions'
           embed-author-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
 
@@ -34,10 +34,10 @@ jobs:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           username: 'fulano'
           avatar-url: 'https://cdn.discordapp.com/attachments/1413674985263730709/1413675018742923345/3bf.jpg?ex=68bccaf5&is=68bb7975&hm=d05cc7dc1c4c16fdb2c96f147e84d59a81eb5141479779e6b584ae32ad1261d7&'
-          embed-title: 'Deploy DEV'
-          embed-description: '✅ O Deploy da api em DEV foi realizado com sucesso! eba 🎉'
+          embed-title: 'Pipeline CI'
+          embed-description: '✅ Pipeline concluída com sucesso! eba 🎉'
           embed-color: 2067276
-          embed-thumbnail-url: 'https://e7.pngegg.com/pngimages/834/472/png-clipart-google-cloud-icon-google-cloud-platform-cloud-computing-amazon-web-services-virtual-private-cloud-cloud-computing-text-trademark.png'
+          embed-thumbnail-url: 'https://media.discordapp.net/attachments/1413674985263730709/1413675507714887771/image0.jpg?ex=68bccb69&is=68bb79e9&hm=c1697b707e5afd5f4526467b135516ff06a76da633e6bc03224faf4ceaff77aa&=&format=webp&width=365&height=402'
           embed-author-name: 'Github Actions'
           embed-author-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
 
