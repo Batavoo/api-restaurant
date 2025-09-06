@@ -13,6 +13,12 @@ module "cloudrun" {
   environment  = "production"
 }
 
+module "cloudiam" {
+  source = "../modules/cloudiam"
+
+  github_repository_name = var.github_repository_name
+}
+
 output "service_url" {
   value = module.cloudrun.service_url
 }

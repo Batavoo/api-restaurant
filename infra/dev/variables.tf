@@ -13,3 +13,8 @@ variable "image_url" {
   description = "URL da imagem docker"
   type        = string
 }
+
+variable "github_repository_name" {
+  description = "The GitHub repository name in the format <org/repo>"
+  type        = string
+}
