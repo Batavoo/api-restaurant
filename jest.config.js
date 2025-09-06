@@ -16,6 +16,7 @@ module.exports = {
       },
     ],
   },
+  modulePathIgnorePatterns: ['src/database'],
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.test.ts',
