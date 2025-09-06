@@ -22,8 +22,6 @@ jobs:
           embed-thumbnail-url: 'https://e7.pngegg.com/pngimages/834/472/png-clipart-google-cloud-icon-google-cloud-platform-cloud-computing-amazon-web-services-virtual-private-cloud-cloud-computing-text-trademark.png'
           embed-author-name: 'Github Actions'
           embed-author-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
-          embed-footer-text: 'URL da execução: ${{ env.ACTION_LINK }}'
-          embed-footer-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
 
   notify-success:
     runs-on: ubuntu-latest
@@ -42,8 +40,6 @@ jobs:
           embed-thumbnail-url: 'https://e7.pngegg.com/pngimages/834/472/png-clipart-google-cloud-icon-google-cloud-platform-cloud-computing-amazon-web-services-virtual-private-cloud-cloud-computing-text-trademark.png'
           embed-author-name: 'Github Actions'
           embed-author-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
-          embed-footer-text: 'URL da api: ${{ needs.deploy.outputs.service_url }}'
-          embed-footer-icon-url: 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
 
   sonar-analyze:
     runs-on: ubuntu-latest
